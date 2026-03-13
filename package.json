@@ -10,8 +10,8 @@
   },
   "scripts": {
     "clean": "rm -rf .parcel-cache dist",
-    "build": "parcel build index.html --public-url _relativeroute_ --no-source-maps --log-level error --config ./parcel/.parcel.prod",
-    "dev": "parcel index.html --no-cache --config ./parcel/.parcel.dev"
+    "build": "parcel build index.html --public-url _relativeroute_ --no-source-maps --log-level error --config ./parcel/prod.json",
+    "dev": "parcel index.html --no-cache --config ./parcel/dev.json"
   },
   "staticFiles": {
     "staticPath": "public"

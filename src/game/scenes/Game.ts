@@ -6,8 +6,8 @@ export class Game extends Scene {
   tilesetTileset: Phaser.Tilemaps.Tileset;
   tilesetObjects: Phaser.Tilemaps.Tileset;
   tilesetTurret: Phaser.Tilemaps.Tileset;
-  tilesetCharacter: Phaser.Tilemaps.Tileset;
-  tilesetAndroid: Phaser.Tilemaps.Tileset;
+  // tilesetCharacter: Phaser.Tilemaps.Tileset;
+  // tilesetAndroid: Phaser.Tilemaps.Tileset;
 
   layerBackground:
     | Phaser.Tilemaps.TilemapLayer
@@ -27,28 +27,32 @@ export class Game extends Scene {
   layerTeletransport:
     | Phaser.Tilemaps.TilemapLayer
     | Phaser.Tilemaps.TilemapGPULayer;
-  layerCharacter:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  layerEnemy: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  // layerCharacter:
+  //   | Phaser.Tilemaps.TilemapLayer
+  //   | Phaser.Tilemaps.TilemapGPULayer;
+  // layerEnemy: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
   layerPlatform: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
   layerShelf: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
 
-  character: Phaser.Physics.Arcade.Sprite;
+  player: Phaser.Physics.Arcade.Sprite;
+  cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
     super("Game");
   }
 
   create() {
+    // Tilemap
     this.tilemap = this.make.tilemap({ key: "map" });
 
+    // Tilesets
     this.tilesetTileset = this.tilemap.addTilesetImage("tileset");
     this.tilesetObjects = this.tilemap.addTilesetImage("objects");
     this.tilesetTurret = this.tilemap.addTilesetImage("turret");
-    this.tilesetCharacter = this.tilemap.addTilesetImage("character");
-    this.tilesetAndroid = this.tilemap.addTilesetImage("android");
+    // this.tilesetCharacter = this.tilemap.addTilesetImage("character");
+    // this.tilesetAndroid = this.tilemap.addTilesetImage("android");
 
+    // Layers
     this.layerBackground = this.tilemap.createLayer("background", [
       this.tilesetTileset,
     ]);
@@ -82,25 +86,95 @@ export class Game extends Scene {
     ]);
     this.layerShelf = this.tilemap.createLayer("shelf", [this.tilesetTileset]);
 
-    this.character = this.physics.add.sprite(100, 600, "character", 0);
-    this.cameras.main.startFollow(this.character);
+    // Player
+    this.player = this.physics.add.sprite(100, 600, "character", 0);
 
+    // Animations
+    this.anims.create({
+      key: "standing-still",
+      frames: this.anims.generateFrameNumbers("character", {
+        start: 0,
+        end: 3,
+      }),
+      frameRate: 5,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "running",
+      frames: this.anims.generateFrameNumbers("character", {
+        start: 8,
+        end: 15,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "jumping",
+      frames: this.anims.generateFrameNumbers("character", {
+        start: 40,
+        end: 47,
+      }),
+      frameRate: 10,
+    });
+
+    // Cameras
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.tilemap.widthInPixels,
+      this.tilemap.heightInPixels,
+    );
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.tilemap.widthInPixels,
+      this.tilemap.heightInPixels,
+    );
+    this.cameras.main.startFollow(this.player);
+
+    // Input
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    // Collisions
     this.layerGround.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerGround);
+    this.physics.add.collider(this.player, this.layerGround);
 
     this.layerRoof.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerRoof);
-    
+    this.physics.add.collider(this.player, this.layerRoof);
+
     this.layerWalls.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerWalls);
-    
+    this.physics.add.collider(this.player, this.layerWalls);
+
     this.layerWallsUnder.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerWallsUnder);
-    
+    this.physics.add.collider(this.player, this.layerWallsUnder);
+
     this.layerWallsOver.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerWallsOver);
-    
+    this.physics.add.collider(this.player, this.layerWallsOver);
+
     this.layerLamps.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.layerLamps);
+    this.physics.add.collider(this.player, this.layerLamps);
+  }
+
+  update() {
+    // Player movement
+    if (this.player.body.blocked.down) {
+      if (this.cursors.left.isDown) {
+        this.player.flipX = true;
+        this.player.setVelocityX(-200);
+        this.player.anims.play("running", true);
+      } else if (this.cursors.right.isDown) {
+        this.player.flipX = false;
+        this.player.setVelocityX(200);
+        this.player.anims.play("running", true);
+      } else {
+        this.player.setVelocityX(0);
+        this.player.anims.play("standing-still", true);
+      }
+    } else if (this.cursors.up.isDown && this.player.body.touching.down) {
+      this.player.setVelocityY(-100);
+      this.player.anims.play("jumping", true);
+    }
   }
 }
