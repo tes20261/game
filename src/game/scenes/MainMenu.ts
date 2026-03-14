@@ -23,7 +23,7 @@ export class MainMenu extends Scene {
         strokeThickness: 8,
         align: "center",
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
 
     this.input.once("pointerdown", () => {
       this.scene.start("Game");

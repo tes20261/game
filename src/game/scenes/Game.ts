@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 
 export class Game extends Scene {
   tilemap: Phaser.Tilemaps.Tilemap;
+  
 
   tilesetTileset: Phaser.Tilemaps.Tileset;
   tilesetObjects: Phaser.Tilemaps.Tileset;
@@ -26,7 +27,7 @@ export class Game extends Scene {
   layerObjects: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
   layerTeletransport:
     | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
+    | Phaser.Tilemaps.TilemapGPULayer
   // layerCharacter:
   //   | Phaser.Tilemaps.TilemapLayer
   //   | Phaser.Tilemaps.TilemapGPULayer;
@@ -138,6 +139,8 @@ export class Game extends Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // Collisions
+    this.player.setCollideWorldBounds(true);
+
     this.layerGround.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player, this.layerGround);
 
@@ -172,9 +175,11 @@ export class Game extends Scene {
         this.player.setVelocityX(0);
         this.player.anims.play("standing-still", true);
       }
-    } else if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-100);
-      this.player.anims.play("jumping", true);
+
+      if (this.cursors.up.isDown) {
+        this.player.setVelocityY(-150);
+        this.player.anims.play("jumping", true);
+      }
     }
   }
 }
