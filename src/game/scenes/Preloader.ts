@@ -24,6 +24,8 @@ export class Preloader extends Scene {
 
     // Main Game
     this.load.tilemapTiledJSON("map", "map.json");
+    this.load.image("tileset", "SpaceStation_Tileset.png");
+    this.load.image("objects", "SpaceStation_Objects.png");
     this.load.spritesheet("android", "SpaceStation_Android_Sheet.png", {
       frameWidth: 32,
       frameHeight: 32,
@@ -32,12 +34,14 @@ export class Preloader extends Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.image("objects", "SpaceStation_Objects.png");
+    this.load.spritesheet("laser", "laser.png", {
+      frameWidth: 24,
+      frameHeight: 16,
+    });
     this.load.spritesheet("projectiles", "SpaceStation_Projectiles_Sheet.png", {
       frameWidth: 32,
-      frameHeight: 32
+      frameHeight: 32,
     });
-    this.load.image("tileset", "SpaceStation_Tileset.png");
     this.load.spritesheet("turret", "SpaceStation_Turret_Sheet.png", {
       frameWidth: 32,
       frameHeight: 32,

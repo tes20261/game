@@ -39,14 +39,20 @@ export class Game extends Scene {
 
   player: Phaser.Physics.Arcade.Sprite;
   android: Phaser.Physics.Arcade.Sprite;
+  laser: Phaser.Physics.Arcade.Group;
+  androidShooting: boolean;
 
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+
+  gameOver: boolean;
 
   constructor() {
     super("Game");
   }
 
   create() {
+    this.gameOver = false;
+
     // Music
     this.music = this.sound.add("music", { loop: true });
     this.music.play();
@@ -154,6 +160,15 @@ export class Game extends Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: "player-dying",
+      frames: this.anims.generateFrameNumbers("character", {
+        start: 32,
+        end: 37,
+      }),
+      frameRate: 10,
+    });
+
     // Android
     this.android = this.physics.add.sprite(200, 320, "android", 0);
 
@@ -187,7 +202,21 @@ export class Game extends Scene {
       frameRate: 10,
     });
 
-    // Cameras
+    // Laser
+    this.laser = this.physics.add.group();
+    this.androidShooting = false;
+
+    this.anims.create({
+      key: "laser",
+      frames: this.anims.generateFrameNumbers("laser", {
+        start: 0,
+        end: 1,
+      }),
+      frameRate: 20,
+      repeat: -1,
+    });
+
+    // Cameras e iluminação
     this.physics.world.setBounds(
       0,
       0,
@@ -235,9 +264,22 @@ export class Game extends Scene {
         tile.setCollision(false, false, true, false);
       }
     });
+
+    this.physics.add.overlap(this.player, this.laser, () => {
+      this.gameOver = true;
+      this.music.stop();
+
+      this.player.setVelocity(0, 0);
+      this.player.anims.play("player-dying", true);
+      this.player.once("animationcomplete", () => {
+        this.scene.pause();
+      });
+    });
   }
 
   update() {
+    if (this.gameOver) return;
+
     // Player movement
     if (this.cursors.left.isDown) {
       this.player.flipX = true;
@@ -260,27 +302,45 @@ export class Game extends Scene {
       this.player.anims.play("player-standing-still", true);
 
     // Android movement
-    if (this.android.y === this.player.y) {
-      this.android.setVelocityX(0);
-      this.android.anims.play("android-shooting", true);
-      /*
-      this.android.once("animationcomplete", () => {
-        console.log(this.android.anims.currentAnim.key);
-        this.laserSound.play();
-        console.log("shooting");
-      });
-      */
-    } else if (this.player.x - this.android.x > 32) {
-      this.android.flipX = false;
-      this.android.setVelocityX(50);
-      this.android.anims.play("android-walking", true);
-    } else if (this.android.x - this.player.x > 32) {
-      this.android.flipX = true;
-      this.android.setVelocityX(-50);
-      this.android.anims.play("android-walking", true);
-    } else {
-      this.android.setVelocityX(0);
-      this.android.anims.play("android-standing-still", true);
+    if (!this.androidShooting) {
+      if (this.android.y === this.player.y) {
+        if (this.player.x > this.android.x) this.android.flipX = false;
+        else this.android.flipX = true;
+
+        this.androidShooting = true;
+        setTimeout(() => {
+          this.androidShooting = false;
+        }, 1000);
+
+        this.android.setVelocityX(0);
+        this.android.anims.play("android-shooting", true);
+        this.android.once("animationcomplete", () => {
+          this.laserSound.play();
+
+          const laser = this.laser.create(
+            this.android.x,
+            this.android.y - 10,
+            "laser",
+            0,
+          );
+          laser.setVelocityX(this.android.flipX ? -300 : 300);
+          laser.body.allowGravity = false;
+          laser.anims.play("laser", true);
+
+          this.android.anims.play("android-standing-still", true);
+        });
+      } else if (this.player.x - this.android.x > 32) {
+        this.android.flipX = false;
+        this.android.setVelocityX(50);
+        this.android.anims.play("android-walking", true);
+      } else if (this.android.x - this.player.x > 32) {
+        this.android.flipX = true;
+        this.android.setVelocityX(-50);
+        this.android.anims.play("android-walking", true);
+      } else {
+        this.android.setVelocityX(0);
+        this.android.anims.play("android-standing-still", true);
+      }
     }
   }
 }
