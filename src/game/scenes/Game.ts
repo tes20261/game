@@ -1,50 +1,52 @@
 import { Scene } from "phaser";
 
 export class Game extends Scene {
-  music: Phaser.Sound.BaseSound;
-  laserSound: Phaser.Sound.BaseSound;
+  music!: Phaser.Sound.BaseSound;
+  laserSound!: Phaser.Sound.BaseSound;
 
-  tilemap: Phaser.Tilemaps.Tilemap;
+  tilemap!: Phaser.Tilemaps.Tilemap;
 
-  tilesetTileset: Phaser.Tilemaps.Tileset;
-  tilesetObjects: Phaser.Tilemaps.Tileset;
-  tilesetTurret: Phaser.Tilemaps.Tileset;
+  tilesetTileset!: Phaser.Tilemaps.Tileset;
+  tilesetObjects!: Phaser.Tilemaps.Tileset;
+  tilesetTurret!: Phaser.Tilemaps.Tileset;
   // tilesetCharacter: Phaser.Tilemaps.Tileset;
   // tilesetAndroid: Phaser.Tilemaps.Tileset;
 
-  layerBackground:
+  layerBackground!:
     | Phaser.Tilemaps.TilemapLayer
     | Phaser.Tilemaps.TilemapGPULayer;
-  layerGround: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerRoof: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWalls: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWallsUnder:
+  layerGround!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerRoof!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerWalls!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerWallsUnder!:
     | Phaser.Tilemaps.TilemapLayer
     | Phaser.Tilemaps.TilemapGPULayer;
-  layerWallsOver:
+  layerWallsOver!:
     | Phaser.Tilemaps.TilemapLayer
     | Phaser.Tilemaps.TilemapGPULayer;
-  layerLamps: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWindows: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerObjects: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerTeletransport:
+  layerLamps!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerWindows!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerObjects!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerTeletransport!:
     | Phaser.Tilemaps.TilemapLayer
     | Phaser.Tilemaps.TilemapGPULayer;
   // layerCharacter:
   //   | Phaser.Tilemaps.TilemapLayer
   //   | Phaser.Tilemaps.TilemapGPULayer;
   // layerEnemy: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerPlatform: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerShelf: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerPlatform!:
+    | Phaser.Tilemaps.TilemapLayer
+    | Phaser.Tilemaps.TilemapGPULayer;
+  layerShelf!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
 
-  player: Phaser.Physics.Arcade.Sprite;
-  android: Phaser.Physics.Arcade.Sprite;
-  laser: Phaser.Physics.Arcade.Group;
-  androidShooting: boolean;
+  player!: Phaser.Physics.Arcade.Sprite;
+  android!: Phaser.Physics.Arcade.Sprite;
+  laser!: Phaser.Physics.Arcade.Group;
+  androidShooting!: boolean;
 
-  cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
 
-  gameOver: boolean;
+  gameOver!: boolean;
 
   constructor() {
     super("Game");
@@ -232,7 +234,8 @@ export class Game extends Scene {
     this.cameras.main.startFollow(this.player);
 
     // Input
-    this.cursors = this.input.keyboard.createCursorKeys();
+    if (this.input.keyboard)
+      this.cursors = this.input.keyboard.createCursorKeys();
 
     // Collisions
     this.player.setCollideWorldBounds(true);
