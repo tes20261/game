@@ -12,32 +12,20 @@ export class Game extends Scene {
   // tilesetCharacter: Phaser.Tilemaps.Tileset;
   // tilesetAndroid: Phaser.Tilemaps.Tileset;
 
-  layerBackground!:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  layerGround!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerRoof!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWalls!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWallsUnder!:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  layerWallsOver!:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  layerLamps!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerWindows!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerObjects!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerTeletransport!:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  // layerCharacter:
-  //   | Phaser.Tilemaps.TilemapLayer
-  //   | Phaser.Tilemaps.TilemapGPULayer;
-  // layerEnemy: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
-  layerPlatform!:
-    | Phaser.Tilemaps.TilemapLayer
-    | Phaser.Tilemaps.TilemapGPULayer;
-  layerShelf!: Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer;
+  layerBackground!: Phaser.Tilemaps.TilemapGPULayer;
+  layerGround!: Phaser.Tilemaps.TilemapGPULayer;
+  layerRoof!: Phaser.Tilemaps.TilemapGPULayer;
+  layerWalls!: Phaser.Tilemaps.TilemapGPULayer;
+  layerWallsUnder!: Phaser.Tilemaps.TilemapGPULayer;
+  layerWallsOver!: Phaser.Tilemaps.TilemapGPULayer;
+  layerLamps!: Phaser.Tilemaps.TilemapGPULayer;
+  layerWindows!: Phaser.Tilemaps.TilemapGPULayer;
+  layerObjects!: Phaser.Tilemaps.TilemapGPULayer;
+  layerTeletransport!: Phaser.Tilemaps.TilemapGPULayer;
+  // layerCharacter!: Phaser.Tilemaps.TilemapGPULayer;
+  // layerEnemy!: Phaser.Tilemaps.TilemapGPULayer;
+  layerPlatform!: Phaser.Tilemaps.TilemapGPULayer;
+  layerShelf!: Phaser.Tilemaps.TilemapGPULayer;
 
   player!: Phaser.Physics.Arcade.Sprite;
   android!: Phaser.Physics.Arcade.Sprite;
@@ -60,6 +48,10 @@ export class Game extends Scene {
     this.music.play();
     this.laserSound = this.sound.add("laser");
 
+    // Ligths
+    this.lights.enable();
+    this.lights.setAmbientColor(0x555555);
+
     // Tilemap
     this.tilemap = this.make.tilemap({ key: "map" });
 
@@ -73,63 +65,64 @@ export class Game extends Scene {
     */
 
     // Layers
-    this.layerBackground = this.tilemap.createLayer("background", [
-      this.tilesetTileset,
-    ]);
-    this.layerGround = this.tilemap.createLayer("ground", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerRoof = this.tilemap.createLayer("roof", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerWalls = this.tilemap.createLayer("walls", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerWallsUnder = this.tilemap.createLayer("walls_under", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerWallsOver = this.tilemap.createLayer("walls_over", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerLamps = this.tilemap.createLayer("lamps", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerWindows = this.tilemap.createLayer("windows", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerObjects = this.tilemap.createLayer("objects", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerTeletransport = this.tilemap.createLayer("teletransport", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
+    this.layerBackground = this.tilemap
+      .createLayer("background", [this.tilesetTileset])
+      .setLighting(true);
+    this.layerGround = this.tilemap
+      .createLayer("ground", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerRoof = this.tilemap
+      .createLayer("roof", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerWalls = this.tilemap
+      .createLayer("walls", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerWallsUnder = this.tilemap
+      .createLayer("walls_under", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerWallsOver = this.tilemap
+      .createLayer("walls_over", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerLamps = this.tilemap
+      .createLayer("lamps", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerWindows = this.tilemap
+      .createLayer("windows", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerObjects = this.tilemap
+      .createLayer("objects", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerTeletransport = this.tilemap
+      .createLayer("teletransport", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
     /*
     this.layerCharacter = this.tilemap.createLayer("character", [
       this.tilesetCharacter,
     ]);
     this.layerEnemy = this.tilemap.createLayer("enemy", [this.tilesetAndroid]);
     */
-    this.layerPlatform = this.tilemap.createLayer("platform", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
-    this.layerShelf = this.tilemap.createLayer("shelf", [
-      this.tilesetTileset,
-      this.tilesetObjects,
-    ]);
+    this.layerPlatform = this.tilemap
+      .createLayer("platform", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
+    this.layerShelf = this.tilemap
+      .createLayer("shelf", [this.tilesetTileset, this.tilesetObjects])
+      .setLighting(true);
 
     // Player
     // this.player = this.physics.add.sprite(100, 656, "character", 0);
-    this.player = this.physics.add.sprite(100, 300, "character", 0);
+    this.player = this.physics.add
+      .sprite(100, 300, "character", 0)
+      .setLighting(true);
+
+    // Player backlight
+    const backlight = this.lights
+      .addLight(this.player.x, this.player.y, 100)
+      .setColor(0xffffff)
+      .setIntensity(1.5);
+
+    this.player.on("positionchange", () => {
+      backlight.setPosition(this.player.x, this.player.y);
+    });
 
     // Player animations
     this.anims.create({
@@ -172,7 +165,10 @@ export class Game extends Scene {
     });
 
     // Android
-    this.android = this.physics.add.sprite(200, 320, "android", 0);
+    this.android = this.physics.add
+
+      .sprite(200, 320, "android", 0)
+      .setLighting(true);
 
     // Android animations
     this.anims.create({
