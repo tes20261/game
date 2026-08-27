@@ -166,7 +166,15 @@ export class Game extends Scene {
 
     this.lola = this.physics.add.sprite(500, 225, "lola", 14);
 
-    this.time.delayedCall(2000, () => {
+    this.joystick = this.plugins.get("rexVirtualJoystick").add(this, {
+      x: 100,
+      y: 350,
+      radius: 50,
+      base: this.add.circle(120, 360, 50, 0x888888),
+      thumb: this.add.circle(120, 360, 25, 0xcccccc),
+    });
+
+    this.physics.add.collider(this.tobias, this.lola, () => {
       this.scene.stop();
       this.scene.start("GameOver");
     });

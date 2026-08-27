@@ -4,6 +4,7 @@ import { GameOver } from "./scenes/GameOver";
 import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
 import { AUTO, Game } from "phaser";
+import VirtualJoystickPlugin from "./plugins/rexvirtualjoystickplugin.min.js";
 
 const config = {
   type: AUTO,
@@ -17,6 +18,15 @@ const config = {
       gravity: { x: 0, y: 0 },
       debug: true,
     },
+  },
+  plugins: {
+    global: [
+      {
+        key: "rexVirtualJoystick",
+        plugin: VirtualJoystickPlugin,
+        start: true,
+      },
+    ],
   },
   scale: {
     mode: Phaser.Scale.FIT,
