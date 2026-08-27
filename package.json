@@ -23,16 +23,22 @@
   "homepage": "https://github.com/phaserjs/template-parcel#readme",
   "devDependencies": {
     "@parcel/transformer-glsl": "2.14.4",
-    "express": "5.1.0",
-    "parcel": "2.14.4",
+    "express": "^5.2.1",
+    "parcel": "^2.16.4",
     "parcel-reporter-clean-dist": "^1.0.4",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "process": "^0.11.10"
   },
   "dependencies": {
-    "phaser": "4.0.0"
+    "phaser": "^4.2.1"
   },
   "staticFiles": {
     "staticPath": "public"
+  },
+  "allowScripts": {
+    "lmdb@2.8.5": true,
+    "@parcel/watcher@2.6.0": true,
+    "@swc/core@1.16.1": true,
+    "msgpackr-extract@3.0.4": true
   }
 }
