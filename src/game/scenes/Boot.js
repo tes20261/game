@@ -6,13 +6,25 @@ export class Boot extends Scene {
   }
 
   preload() {
-    //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
-    //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
-
-    this.load.image("background", "assets/bg.png");
+    this.load.image("background", "assets/boot-background.png");
+    this.load.font("Rubik Glitch", "assets/RubikGlitch-Regular.ttf");
   }
 
   create() {
-    this.scene.start("Preloader");
+    this.add.image(400, 225, "background");
+
+    this.add
+      .text(400, 400, "Clique na tela para iniciar.", {
+        fontFamily: "Rubik Glitch",
+        fontSize: 36,
+        color: "#ffffff",
+        align: "center",
+      })
+      .setOrigin(0.5);
+
+    this.input.once("pointerdown", () => {
+      this.scene.stop();
+      this.scene.start("Preloader");
+    });
   }
 }

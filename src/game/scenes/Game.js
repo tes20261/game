@@ -6,27 +6,12 @@ export class Game extends Scene {
   }
 
   create() {
-    this.cameras.main.setBackgroundColor(0x00ff00);
+    this.tobias = this.physics.add.sprite(300, 225, "tobias", 14);
 
-    this.add.image(512, 384, "background").setAlpha(0.5);
+    this.lola = this.physics.add.sprite(500, 225, "lola", 14);
 
-    this.add
-      .text(
-        512,
-        384,
-        "Make something fun!\nand share it with us:\nsupport@phaser.io",
-        {
-          fontFamily: "Arial Black",
-          fontSize: 38,
-          color: "#ffffff",
-          stroke: "#000000",
-          strokeThickness: 8,
-          align: "center",
-        },
-      )
-      .setOrigin(0.5);
-
-    this.input.once("pointerdown", () => {
+    this.time.delayedCall(2000, () => {
+      this.scene.stop();
       this.scene.start("GameOver");
     });
   }
