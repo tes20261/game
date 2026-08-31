@@ -19,6 +19,11 @@ export class Preloader extends Scene {
   preload() {
     this.load.setPath("assets");
 
+    this.load.tilemapTiledJSON("map", "map/map.json");
+    this.load.image("grass", "map/grass.png");
+    this.load.image("shadows", "map/shadows.png");
+    this.load.image("items", "map/items.png");
+
     this.load.spritesheet("tobias", "tobias.png", {
       frameWidth: 64,
       frameHeight: 64,

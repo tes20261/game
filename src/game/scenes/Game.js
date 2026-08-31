@@ -6,7 +6,24 @@ export class Game extends Scene {
   }
 
   create() {
+    this.tilemap = this.make.tilemap({ key: "map" });
+
+    // tilesets
+    this.tilesetGrass = this.tilemap.addTilesetImage("grass");
+    this.tilesetShadows = this.tilemap.addTilesetImage("shadows");
+    this.tilesetItems = this.tilemap.addTilesetImage("items");
+
+    // layers
+    this.layerFloor = this.tilemap.createLayer("floor", [this.tilesetGrass]);
+    this.layerShadows = this.tilemap.createLayer("shadows", [
+      this.tilesetShadows,
+    ]);
+    this.layerObjects = this.tilemap.createLayer("objects", [
+      this.tilesetItems,
+    ]);
+
     this.tobias = this.physics.add.sprite(300, 225, "tobias", 14);
+    this.cameras.main.startFollow(this.tobias);
 
     this.anims.create({
       key: "tobias-stopped-up",
@@ -213,6 +230,9 @@ export class Game extends Scene {
         true,
       );
     });
+
+    this.layerObjects.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.tobias, this.layerObjects);
 
     this.physics.add.collider(this.tobias, this.lola, () => {
       this.scene.stop();
