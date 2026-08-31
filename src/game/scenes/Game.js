@@ -9,7 +9,7 @@ export class Game extends Scene {
     this.tobias = this.physics.add.sprite(300, 225, "tobias", 14);
 
     this.anims.create({
-      key: "tobias-parado-cima",
+      key: "tobias-stopped-up",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 28,
         end: 28,
@@ -18,7 +18,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-parado-baixo",
+      key: "tobias-stopped-down",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 14,
         end: 14,
@@ -27,7 +27,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-parado-esquerda",
+      key: "tobias-stopped-left",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 36,
         end: 36,
@@ -36,7 +36,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-parado-direita",
+      key: "tobias-stopped-right",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 52,
         end: 52,
@@ -45,7 +45,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-cavando-cima",
+      key: "tobias-digging-up",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 28,
         end: 35,
@@ -55,7 +55,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-cavando-baixo",
+      key: "tobias-digging-down",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 44,
         end: 51,
@@ -65,7 +65,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-cavando-esquerda",
+      key: "tobias-digging-left",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 36,
         end: 43,
@@ -75,7 +75,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-cavando-direita",
+      key: "tobias-digging-right",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 52,
         end: 59,
@@ -85,7 +85,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-andando-cima",
+      key: "tobias-walking-up",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 60,
         end: 68,
@@ -95,7 +95,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-andando-baixo",
+      key: "tobias-walking-down",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 78,
         end: 86,
@@ -105,7 +105,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-andando-esquerda",
+      key: "tobias-walking-left",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 69,
         end: 77,
@@ -115,7 +115,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-andando-direita",
+      key: "tobias-walking-right",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 87,
         end: 95,
@@ -125,7 +125,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-correndo-cima",
+      key: "tobias-running-up",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 236,
         end: 243,
@@ -135,7 +135,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-correndo-baixo",
+      key: "tobias-running-down",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 252,
         end: 259,
@@ -145,7 +145,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-correndo-esquerda",
+      key: "tobias-running-left",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 244,
         end: 251,
@@ -155,7 +155,7 @@ export class Game extends Scene {
     });
 
     this.anims.create({
-      key: "tobias-correndo-direita",
+      key: "tobias-running-right",
       frames: this.anims.generateFrameNumbers("tobias", {
         start: 260,
         end: 267,
@@ -172,6 +172,46 @@ export class Game extends Scene {
       radius: 50,
       base: this.add.circle(120, 360, 50, 0x888888),
       thumb: this.add.circle(120, 360, 25, 0xcccccc),
+    });
+
+    this.joystick.on("update", () => {
+      const cursorKeys = this.joystick.createCursorKeys();
+
+      switch (true) {
+        case this.joystick.force > 25:
+          this.tobias.animation = "running";
+          this.tobias.velocity = 200;
+          break;
+        case this.joystick.force > 0:
+          this.tobias.animation = "walking";
+          this.tobias.velocity = 100;
+          break;
+        default:
+          this.tobias.animation = "stopped";
+          this.tobias.setVelocity(0, 0);
+      }
+
+      if (cursorKeys.up.isDown) {
+        this.tobias.orientation = "up";
+        this.tobias.setVelocityY(-this.tobias.velocity);
+      }
+      if (cursorKeys.down.isDown) {
+        this.tobias.orientation = "down";
+        this.tobias.setVelocityY(this.tobias.velocity);
+      }
+      if (cursorKeys.left.isDown) {
+        this.tobias.orientation = "left";
+        this.tobias.setVelocityX(-this.tobias.velocity);
+      }
+      if (cursorKeys.right.isDown) {
+        this.tobias.orientation = "right";
+        this.tobias.setVelocityX(this.tobias.velocity);
+      }
+
+      this.tobias.anims.play(
+        `tobias-${this.tobias.animation}-${this.tobias.orientation}`,
+        true,
+      );
     });
 
     this.physics.add.collider(this.tobias, this.lola, () => {
