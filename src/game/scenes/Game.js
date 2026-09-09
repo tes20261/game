@@ -6,6 +6,25 @@ export class Game extends Scene {
   }
 
   create() {
+    // lights
+    this.lights.enable().setAmbientColor(0x666666);
+
+    // audio
+    this.owlSound = this.sound.add("owl");
+    this.cemeterySound = this.sound
+      .add("cemetery")
+      .play({ loop: true, volume: 0.5 });
+
+    this.ownSoundLoop = this.time.addEvent({
+      delay: Math.floor(Math.random() * 10000) + 5000,
+      callback: () => {
+        this.owlSound.play();
+        console.log("Owl sound played", this.ownSoundLoop.delay);
+      },
+      loop: true,
+    });
+
+    // map
     this.tilemap = this.make.tilemap({ key: "map" });
 
     // tilesets
@@ -14,15 +33,20 @@ export class Game extends Scene {
     this.tilesetItems = this.tilemap.addTilesetImage("items");
 
     // layers
-    this.layerFloor = this.tilemap.createLayer("floor", [this.tilesetGrass]);
-    this.layerShadows = this.tilemap.createLayer("shadows", [
-      this.tilesetShadows,
-    ]);
-    this.layerObjects = this.tilemap.createLayer("objects", [
-      this.tilesetItems,
-    ]);
+    this.layerFloor = this.tilemap
+      .createLayer("floor", [this.tilesetGrass])
+      .setLighting(true);
+    this.layerShadows = this.tilemap
+      .createLayer("shadows", [this.tilesetShadows])
+      .setLighting(true);
+    this.layerObjects = this.tilemap
+      .createLayer("objects", [this.tilesetItems])
+      .setLighting(true);
 
-    this.tobias = this.physics.add.sprite(300, 225, "tobias", 14);
+    this.tobias = this.physics.add
+      .sprite(300, 225, "tobias", 14)
+      .setLighting(true);
+    
     this.cameras.main.startFollow(this.tobias);
 
     this.anims.create({
@@ -181,7 +205,7 @@ export class Game extends Scene {
       repeat: -1,
     });
 
-    this.lola = this.physics.add.sprite(500, 225, "lola", 14);
+    this.lola = this.physics.add.sprite(500, 225, "lola", 14).setLighting(true);
 
     this.joystick = this.plugins.get("rexVirtualJoystick").add(this, {
       x: 100,
@@ -236,6 +260,7 @@ export class Game extends Scene {
 
     this.physics.add.collider(this.tobias, this.lola, () => {
       this.scene.stop();
+      this.cemeterySound.stop();
       this.scene.start("GameOver");
     });
   }

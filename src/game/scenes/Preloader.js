@@ -32,6 +32,9 @@ export class Preloader extends Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+
+    this.load.audio("owl", "audio/owl.mp3");
+    this.load.audio("cemetery", "audio/cemetery.mp3");
   }
 
   create() {
