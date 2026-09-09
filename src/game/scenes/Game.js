@@ -11,9 +11,8 @@ export class Game extends Scene {
 
     // audio
     this.owlSound = this.sound.add("owl");
-    this.cemeterySound = this.sound
-      .add("cemetery")
-      .play({ loop: true, volume: 0.5 });
+    this.cemeterySound = this.sound.add("cemetery");
+    this.cemeterySound.play({ loop: true, volume: 0.5 });
 
     this.ownSoundLoop = this.time.addEvent({
       delay: Math.floor(Math.random() * 10000) + 5000,
@@ -46,7 +45,12 @@ export class Game extends Scene {
     this.tobias = this.physics.add
       .sprite(300, 225, "tobias", 14)
       .setLighting(true);
-    
+
+    this.backlight = this.lights
+      .addLight(this.tobias.x, this.tobias.y, 100)
+      .setColor(0xffffff)
+      .setIntensity(1.5);
+
     this.cameras.main.startFollow(this.tobias);
 
     this.anims.create({
@@ -263,5 +267,12 @@ export class Game extends Scene {
       this.cemeterySound.stop();
       this.scene.start("GameOver");
     });
+  }
+
+  update() {
+    if (this.tobias && this.backlight) {
+      this.backlight.x = this.tobias.x;
+      this.backlight.y = this.tobias.y;
+    }
   }
 }
